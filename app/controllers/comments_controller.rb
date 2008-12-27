@@ -1,23 +1,7 @@
 class CommentsController < ApplicationController
   before_filter :find_post
   before_filter :authenticate, :only => :destory
-  # GET /comments
-  # GET /comments.xml
-  def index
-    @comments = @post.comments.find(:all)
-    
-    respond_to do |format|
-      format.html
-      format.xml  { render :xml => @comments }
-    end
-  end
-
-  # GET /comments/1
-  # GET /comments/1.xml
-  def show
-    @comment = @post.comments.find(params[:id])
-  end
-
+  
   def new
     @comment = @post.comments.build
   end
@@ -27,25 +11,19 @@ class CommentsController < ApplicationController
   end
 
   def create
-    @comment = @post.comments.build(params[:comments])
+    @comment = @post.comments.build(params[:comment])
     if @comment.save
-      flash[:notice] = 'Comments was successfully created.'
-      redirect_to(@comments)
+      flash[:notice] = 'Comment was successfully created.'
     else
-      render :action => "new"
+      flash[:notice] = 'There was a trouble saving your comment'
     end
+    redirect_to @post
   end
 
-  # DELETE /comments/1
-  # DELETE /comments/1.xml
   def destroy
-    @comments = Comments.find(params[:id])
-    @comments.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(comments_url) }
-      format.xml  { head :ok }
-    end
+    @comment = @post.comments.find(params[:id])
+    @comment.destroy
+    redirect_to @post
   end
   
   protected

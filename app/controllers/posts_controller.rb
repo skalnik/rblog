@@ -1,7 +1,6 @@
 class PostsController < ApplicationController
-  before_filter :authenticate, :only => [:new, :create, :edit]
-  # GET /posts
-  # GET /posts.xml
+  before_filter :authenticate, :only => [:new, :create, :edit, :delete]
+
   def index
     @posts = Post.find(:all)
 
@@ -11,19 +10,16 @@ class PostsController < ApplicationController
     end
   end
 
-  # GET /posts/1
-  # GET /posts/1.xml
   def show
     @post = Post.find(params[:id])
-    @comments = 
+    @comments = @post.comments
+    
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @post }
     end
   end
 
-  # GET /posts/new
-  # GET /posts/new.xml
   def new
     @post = Post.new
 
@@ -33,13 +29,10 @@ class PostsController < ApplicationController
     end
   end
 
-  # GET /posts/1/edit
   def edit
     @post = Post.find(params[:id])
   end
 
-  # POST /posts
-  # POST /posts.xml
   def create
     @post = Post.new(params[:post])
 
@@ -55,8 +48,6 @@ class PostsController < ApplicationController
     end
   end
 
-  # PUT /posts/1
-  # PUT /posts/1.xml
   def update
     @post = Post.find(params[:id])
 
@@ -72,8 +63,6 @@ class PostsController < ApplicationController
     end
   end
 
-  # DELETE /posts/1
-  # DELETE /posts/1.xml
   def destroy
     @post = Post.find(params[:id])
     @post.destroy
